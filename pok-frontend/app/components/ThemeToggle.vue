@@ -15,7 +15,7 @@ const toggleTheme = () => {
            dark:bg-gray-800 dark:text-gray-100
            transition"
   >
-    <span v-if="colorMode.preference === 'dark'">Dark</span>
-    <span v-else>Light</span>
+    <span v-if="colorMode.preference === 'dark'">🌙 Dark</span>
+    <span v-else>☀️ Light</span>
   </button>
 </template>

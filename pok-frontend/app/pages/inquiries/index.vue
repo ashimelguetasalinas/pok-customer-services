@@ -14,7 +14,15 @@ onMounted(() => {
 
 <template>
   <div class="p-6">
-    <h1 class="text-2xl font-semibold mb-4">Inquiries</h1>
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-semibold">Inquiries</h1>
+      <NuxtLink 
+        to="/inquiries/create"
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 shadow-lg shadow-blue-500/20"
+      >
+        <span>+</span> Nueva Consulta
+      </NuxtLink>
+    </div>
 
     <!-- Loading -->
     <div v-if="loading" class="text-gray-500">

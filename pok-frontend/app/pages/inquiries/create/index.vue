@@ -35,9 +35,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { useInquiries } from '@/composables/useInquiries';
+import { useInquiries } from '../../composables/useInquiries';
 
-const { loading, error, success, createInquiry } = useInquiries()
+const { loading, error, success, createInquiry, getInquiry } = useInquiries()
 const router = useRouter()
 
 const form = reactive({
@@ -46,13 +46,20 @@ const form = reactive({
   message: ''
 })
 
-const submitForm = async () => {
-  const result = await createInquiry(form)
-  if (result) {
-    form.customer_name = ''
-    form.email = ''
-    form.message = ''
-    router.push('/inquiries') // vuelve al dashboard
-  }
+const inquiry = reactive<any>(null)
+
+async function submit() {
+  const created = await createInquiry(form)
+
+  inquiry.value = created
+  const interval = setInterval(async () => {
+    const updated = await getInquiry(created.id)
+
+    if (updated.status === 'processed') {
+      Object.assign(inquiry.value, updated)
+      clearInterval(interval)
+      router.push('/inquiries')
+    }
+  }, 2000)
 }
 </script>

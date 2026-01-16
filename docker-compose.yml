@@ -64,3 +64,12 @@ services:
     ports:
       - "5432:5432"
 
+  ai-service:
+    build:
+      context: ./backend/ai_service
+    container_name: ai_service
+    env_file:
+      - ./backend/customer_service_backend/.env
+    ports:
+      - "8001:8000"
+

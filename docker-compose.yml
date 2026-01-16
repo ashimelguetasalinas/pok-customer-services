@@ -55,3 +55,14 @@ services:
       - "3000:3000"
     depends_on:
       - web
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_DB: customer_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+

@@ -10,7 +10,7 @@ onMounted(() => {
   <div>
     <h1>Inquiries</h1>
 
-    <div v-if="loading">Cargando...</div>
+    <div v-if="loading">Loading...</div>
 
     <ul>
       <li v-for="i in inquiries" :key="i.id">

@@ -1,5 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
+
 
 from .models import Inquiry
 from .serializers import (
@@ -14,6 +16,11 @@ class InquiryCreateView(generics.CreateAPIView):
     queryset = Inquiry.objects.all()
     serializer_class = InquiryCreateSerializer
 
+    @extend_schema(
+        request=InquiryCreateSerializer,
+        responses={201: InquiryCreateSerializer},
+        description="Create an inquiry and send it to AI processing"
+    )
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

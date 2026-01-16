@@ -1,5 +1,6 @@
 Django>=5.0
 djangorestframework
+drf-spectacular
 
 celery>=5.3
 django-celery-results>=2.5

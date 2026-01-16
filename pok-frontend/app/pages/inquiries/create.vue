@@ -68,7 +68,7 @@ const submitForm = async () => {
         </svg>
 
         <p class="text-gray-700 text-sm font-medium">
-            Analizando consulta con IA…
+            Analyzing inquiry with AI…
         </p>
     </div>
 
@@ -80,9 +80,9 @@ const submitForm = async () => {
         to="/inquiries"
         class="text-gray-500 hover:text-gray-700 transition"
       >
-        ← Volver
+        ← Back
       </NuxtLink>
-      <h1 class="text-2xl font-bold text-gray-800">Nueva Consulta</h1>
+      <h1 class="text-2xl font-bold text-gray-800">New Inquiry</h1>
     </div>
 
     <!-- Form Card -->
@@ -91,7 +91,7 @@ const submitForm = async () => {
         
         <!-- Customer Name -->
         <div>
-          <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nombre Cliente</label>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Customer Name</label>
           <input
             id="name"
             v-model="form.customer_name"
@@ -117,7 +117,7 @@ const submitForm = async () => {
 
         <!-- Message -->
         <div>
-          <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Mensaje</label>
+          <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
           <textarea
             id="message"
             v-model="form.message"
@@ -144,7 +144,7 @@ const submitForm = async () => {
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            {{ loading ? 'Procesando...' : 'Crear Consulta' }}
+            {{ loading ? 'Processing...' : 'Create Inquiry' }}
           </button>
         </div>
 

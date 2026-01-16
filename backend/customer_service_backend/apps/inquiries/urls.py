@@ -6,7 +6,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path("", InquiryListView.as_view(), name="inquiry-list"),
-    path("create/", InquiryCreateView.as_view(), name="inquiry-create"),
-    path("<int:pk>/", InquiryDetailView.as_view(), name="inquiry-detail"),
+    path("inquiries/", InquiryListView.as_view(), name="inquiry-list"),
+    path("inquiries/create/", InquiryCreateView.as_view(), name="inquiry-create"),
+    path("inquiries/<int:pk>/", InquiryDetailView.as_view(), name="inquiry-detail"),
 ]

@@ -1,10 +1,10 @@
 <template>
   <div class="max-w-md mx-auto mt-10 p-4 border rounded shadow">
-    <h2 class="text-xl font-bold mb-4">Crear Nueva Consulta</h2>
+    <h2 class="text-xl font-bold mb-4">New Inquiry</h2>
 
     <form @submit.prevent="submitForm">
       <div class="mb-3">
-        <label class="block mb-1">Nombre</label>
+        <label class="block mb-1">Customer Name</label>
         <input v-model="form.customer_name" type="text" class="w-full border p-2 rounded" required />
       </div>
 
@@ -19,15 +19,15 @@
       </div>
 
       <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded" :disabled="loading">
-        {{ loading ? 'Enviando...' : 'Crear Consulta' }}
+        {{ loading ? 'Sending...' : 'Create Inquiry' }}
       </button>
     </form>
 
-    <p v-if="success" class="mt-2 text-green-600">Consulta creada exitosamente!</p>
+    <p v-if="success" class="mt-2 text-green-600">Inquiry created successfully!</p>
     <p v-if="error" class="mt-2 text-red-600">{{ error }}</p>
 
     <NuxtLink href="/inquiries" class="inline-block mt-4 text-blue-600 underline">
-      Volver al listado
+      Back to list
     </NuxtLink>
   </div>
 </template>

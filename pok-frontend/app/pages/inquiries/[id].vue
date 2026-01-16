@@ -21,7 +21,7 @@ watchEffect(() => {
 })
 
 const sendResponse = () => {
-  alert('Respuesta enviada (simulado)')
+  alert('Response sent (simulated)')
 }
 </script>
 
@@ -29,30 +29,30 @@ const sendResponse = () => {
   <div class="max-w-5xl mx-auto p-6 space-y-6">
     <!-- Header -->
     <div class="flex justify-between items-center">
-      <h1 class="text-2xl font-bold">Detalle del Inquiry</h1>
+      <h1 class="text-2xl font-bold">Inquiry Details</h1>
       <NuxtLink
         to="/inquiries"
         class="text-blue-600 hover:underline"
       >
-        ← Volver
+        ← Back
       </NuxtLink>
     </div>
 
     <!-- Loading -->
     <div v-if="pending" class="text-gray-500">
-      Cargando...
+      Loading...
     </div>
 
     <!-- Error -->
     <div v-else-if="error" class="text-red-600">
-      Error al cargar el inquiry
+      Error loading inquiry
     </div>
 
     <!-- Content -->
     <div v-else class="space-y-6">
       <!-- Mensaje del cliente -->
       <div class="bg-white rounded-xl shadow p-6">
-        <h2 class="font-semibold mb-2">Mensaje del Cliente</h2>
+        <h2 class="font-semibold mb-2">Customer Message</h2>
         <p class="text-gray-700 whitespace-pre-line">
           {{ inquiry?.message }}
 
@@ -62,7 +62,7 @@ const sendResponse = () => {
       <!-- Respuesta sugerida -->
       <div class="bg-white rounded-xl shadow p-6">
         <h2 class="font-semibold mb-2">
-          Respuesta sugerida por IA
+          AI Suggested Response
         </h2>
 
         <textarea
@@ -76,7 +76,7 @@ const sendResponse = () => {
             @click="sendResponse"
             class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
           >
-            Enviar respuesta
+            Send Response
           </button>
         </div>
       </div>

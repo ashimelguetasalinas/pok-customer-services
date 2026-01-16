@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_spectacular',
 
     # Celery
     'django_celery_results',
@@ -35,6 +36,19 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'SPECTACULAR_SETTINGS': {
+        'TITLE': 'Customer Service API',
+        'VERSION': '1.0.0',
+        'DESCRIPTION': 'API for customer service',
+        'CONTACT': {
+            'name': 'Ashim Elgueta',
+            'email': 'ashimelguetasalinas@gmail.com',
+        },
+        'LICENSE': {
+            'name': 'MIT License',
+        }, 
+    }
 }
 
 MIDDLEWARE = [
@@ -138,4 +152,3 @@ CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_TIMEZONE = 'UTC'
 
 CORS_ALLOW_ALL_ORIGINS = True
-

@@ -20,13 +20,13 @@ onMounted(() => {
         to="/inquiries/create"
         class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 shadow-lg shadow-blue-500/20"
       >
-        <span>+</span> Nueva Consulta
+        <span>+</span> New Inquiry
       </NuxtLink>
     </div>
 
     <!-- Loading -->
     <div v-if="loading" class="text-gray-500">
-      Cargando consultas...
+      Loading inquiries...
     </div>
 
     <!-- Error -->
@@ -36,7 +36,7 @@ onMounted(() => {
 
     <!-- Empty -->
     <div v-else-if="inquiries.length === 0" class="text-gray-500">
-      No hay consultas aún.
+      No inquiries yet.
     </div>
 
     <!-- Table -->
@@ -90,7 +90,7 @@ onMounted(() => {
                 transition
               "
             >
-              Ver detalle
+              Details
               <span class="text-xs">→</span>
             </NuxtLink>
           </td>

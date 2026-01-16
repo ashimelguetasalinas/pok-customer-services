@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+  web:
+    build:
+      context: ./backend/customer_service_backend
+    container_name: backend
+    command: python manage.py runserver 0.0.0.0:8000
+    env_file:
+      - ./backend/customer_service_backend/.env
+    volumes:
+      - ./backend:/app
+      - ./backend/customer_service_backend/db.sqlite3:/app/customer_service_backend/db.sqlite3
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  celery:
+    build:
+      context: ./backend/customer_service_backend
+    container_name: celery
+    command: celery -A config worker -l info
+    env_file:
+      - ./backend/customer_service_backend/.env
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - redis
+      - web
+
+  flower:
+    image: mher/flower
+    container_name: flower
+    command: celery --broker=redis://redis:6379/0 flower
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  frontend:
+    build:
+      context: ./pok-frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    environment:
+      - NUXT_HOST=0.0.0.0
+      - NUXT_PORT=3000
+      - NUXT_PUBLIC_API_URL=http://web:8000/api  # Para que Nuxt consuma el backend dentro de docker
+    ports:
+      - "3000:3000"
+    depends_on:
+      - web
+
+volumes:
+  sqlite_data: {}

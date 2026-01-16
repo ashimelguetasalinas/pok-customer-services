@@ -1,0 +1,41 @@
+from django.db import models
+
+class Inquiry(models.Model):
+
+    STATUS_CHOICES = (
+        ("pending", "Pending"),
+        ("processed", "Processed"),
+        ("failed", "Failed"),
+    )
+
+    CATEGORY_CHOICES = (
+        ("sales", "Sales"),
+        ("support", "Support"),
+        ("complaint", "Complaint"),
+        ("spam", "Spam"),
+    )
+
+    SENTIMENT_CHOICES = (
+        ("positive", "Positive"),
+        ("neutral", "Neutral"),
+        ("negative", "Negative"),
+    )
+
+    customer_name = models.CharField(max_length=255)
+    email = models.EmailField()
+    message = models.TextField()
+
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, null=True)
+    sentiment = models.CharField(max_length=50, choices=SENTIMENT_CHOICES, null=True)
+    suggested_response = models.TextField(null=True)
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="pending",
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.customer_name} - {self.status}"

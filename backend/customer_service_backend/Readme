@@ -1,0 +1,6 @@
+## Levantar entorno con Docker
+docker compose up --build
+
+
+“Las tareas de IA se procesan de forma asíncrona con Celery usando Redis como broker, 
+y Flower permite monitorear en tiempo real el estado de los workers y tareas.”

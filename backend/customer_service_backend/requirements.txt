@@ -1,0 +1,11 @@
+Django>=5.0
+djangorestframework
+
+celery>=5.3
+django-celery-results>=2.5
+django-celery-beat>=2.6
+redis>=5.0
+django-cors-headers>=4.0
+
+openai
+python-dotenv

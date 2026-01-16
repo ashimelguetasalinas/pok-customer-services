@@ -17,6 +17,7 @@ def process_inquiry_ai(self, inquiry_id):
         inquiry.save()
 
     except Exception as exc:
+        print("🔥 ERROR EN IA:", exc)   # <-- CLAVE
         inquiry.status = "failed"
         inquiry.save(update_fields=["status"])
         raise self.retry(exc=exc, countdown=10)

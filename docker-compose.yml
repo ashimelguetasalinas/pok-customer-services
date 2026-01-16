@@ -9,8 +9,7 @@ services:
     env_file:
       - ./backend/customer_service_backend/.env
     volumes:
-      - ./backend:/app
-      - ./backend/customer_service_backend/db.sqlite3:/app/customer_service_backend/db.sqlite3
+      - ./backend/customer_service_backend:/app
     ports:
       - "8000:8000"
     depends_on:
@@ -24,7 +23,7 @@ services:
     env_file:
       - ./backend/customer_service_backend/.env
     volumes:
-      - ./backend:/app
+      - ./backend/customer_service_backend:/app
     depends_on:
       - redis
       - web
@@ -47,16 +46,12 @@ services:
   frontend:
     build:
       context: ./pok-frontend
-      dockerfile: Dockerfile
     container_name: frontend
     environment:
       - NUXT_HOST=0.0.0.0
       - NUXT_PORT=3000
-      - NUXT_PUBLIC_API_URL=http://web:8000/api  # Para que Nuxt consuma el backend dentro de docker
+      - NUXT_PUBLIC_API_URL=http://backend:8000/api
     ports:
       - "3000:3000"
     depends_on:
       - web
-
-volumes:
-  sqlite_data: {}

@@ -3,11 +3,16 @@ defineProps<{
   category: string | null
 }>()
 
+
+
+
 const map: Record<string, string> = {
   'sales': 'bg-blue-100 text-blue-800',
-  'support': 'bg-purple-100 text-purple-800',
+  'technical_support': 'bg-purple-100 text-purple-800',
   'complaint': 'bg-red-100 text-red-800',
   'spam': 'bg-gray-200 text-gray-700',
+  "billing": 'bg-green-100 text-green-800',
+  "general_inquiry": 'bg-yellow-100 text-yellow-800',
 }
 </script>
 

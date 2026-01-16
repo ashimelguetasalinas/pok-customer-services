@@ -13,6 +13,8 @@ class Inquiry(models.Model):
         ("support", "Support"),
         ("complaint", "Complaint"),
         ("spam", "Spam"),
+        ("billing", "Billing"),
+        ("general_inquiry", "General Inquiry"),
     )
 
     SENTIMENT_CHOICES = (

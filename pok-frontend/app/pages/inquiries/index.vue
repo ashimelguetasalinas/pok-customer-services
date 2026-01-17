@@ -136,19 +136,17 @@ onUnmounted(() => {
       <p class="mt-1 text-gray-500">Get started by creating a new inquiry.</p>
     </div>
 
-    <!-- Table -->
-    <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <div v-else class="overflow-hidden bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+        <table class="min-w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-700/50">
             <tr>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Message Preview</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Category</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Sentiment</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-              <th scope="col" class="relative px-6 py-3">
+              <th scope="col" class="w-[22%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
+              <th scope="col" class="w-[22%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Message</th>
+              <th scope="col" class="w-[12%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+              <th scope="col" class="w-[12%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Category</th>
+              <th scope="col" class="w-[12%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Sentiment</th>
+              <th scope="col" class="w-[10%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+              <th scope="col" class="w-[10%] relative px-4 py-3">
                 <span class="sr-only">Actions</span>
               </th>
             </tr>
@@ -161,72 +159,69 @@ onUnmounted(() => {
               @click="$router.push(`/inquiries/${item?.id}`)"
             >
               <!-- Customer -->
-              <td class="px-6 py-4 whitespace-nowrap">
+              <td class="px-4 py-4 truncate">
                 <div class="flex items-center">
-                  <div class="flex-shrink-0 h-10 w-10">
-                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                  <div class="flex-shrink-0 h-8 w-8">
+                    <div class="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-sm">
                       {{ getInitials(item?.customer_name) }}
                     </div>
                   </div>
-                  <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{ item?.customer_name || 'Unknown' }}</div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ item?.email || 'No email' }}</div>
+                  <div class="ml-3 truncate">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white truncate" :title="item?.customer_name">{{ item?.customer_name || 'Unknown' }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 truncate" :title="item?.email">{{ item?.email || 'No email' }}</div>
                   </div>
                 </div>
               </td>
 
               <!-- Message Preview -->
-              <td class="px-6 py-4">
-                <div class="text-sm text-gray-900 dark:text-white max-w-xs truncate">
+              <td class="px-4 py-4">
+                <div class="text-sm text-gray-900 dark:text-white truncate" :title="item?.message">
                   {{ item?.message || 'No message content' }}
                 </div>
               </td>
 
               <!-- Status -->
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize"
+              <td class="px-4 py-4 whitespace-nowrap">
+                <span class="px-2 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full capitalize"
                   :class="{
                     'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300': item?.status === 'processed',
                     'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300': item?.status === 'pending',
                     'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300': item?.status === 'failed'
                   }"
                 >
-                  <span class="w-1.5 h-1.5 rounded-full mr-1.5 self-center" 
-                    :class="{
-                      'bg-green-400': item?.status === 'processed',
-                      'bg-yellow-400': item?.status === 'pending',
-                      'bg-red-400': item?.status === 'failed'
-                    }"
-                  ></span>
                   {{ item?.status }}
                 </span>
               </td>
 
               <!-- Category -->
-              <td class="px-6 py-4 whitespace-nowrap">
-                <CategoryBadge :category="item?.category ?? null" />
+              <td class="px-4 py-4 whitespace-nowrap">
+                <div class="transform scale-90 origin-left">
+                  <CategoryBadge :category="item?.category ?? null" />
+                </div>
               </td>
 
               <!-- Sentiment -->
-              <td class="px-6 py-4 whitespace-nowrap">
-                <SentimentBadge :sentiment="item?.sentiment ?? null" />
+              <td class="px-4 py-4 whitespace-nowrap">
+                <div class="transform scale-90 origin-left">
+                  <SentimentBadge :sentiment="item?.sentiment ?? null" />
+                </div>
               </td>
 
               <!-- Date -->
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+              <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">
                 {{ item?.created_at ? new Date(item.created_at).toLocaleDateString() : '-' }}
               </td>
 
               <!-- Actions -->
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <span class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 opacity-0 group-hover:opacity-100 transition-opacity">
-                  View Details →
+              <td class="px-4 py-4 whitespace-nowrap text-right text-xs font-medium">
+                <span class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition-opacity">
+                  Details
                 </span>
               </td>
             </tr>
           </tbody>
         </table>
-      </div>
+
       
       <!-- Pagination -->
       <div class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">

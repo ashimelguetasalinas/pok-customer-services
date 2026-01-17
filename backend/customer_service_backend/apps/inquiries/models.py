@@ -10,7 +10,7 @@ class Inquiry(models.Model):
 
     CATEGORY_CHOICES = (
         ("sales", "Sales"),
-        ("support", "Support"),
+        ("technical_support", "Technical Support"),
         ("complaint", "Complaint"),
         ("spam", "Spam"),
         ("billing", "Billing"),

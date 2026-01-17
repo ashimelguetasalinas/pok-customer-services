@@ -20,13 +20,45 @@ export function useInquiries() {
     const loading = ref(false)
     const error = ref<string | null>(null)
 
-    // 🔹 LISTADO
-    const fetchInquiries = async () => {
+    // 🔹 LISTADO (con filtros y paginación)
+    const totalCount = ref(0)
+    const currentPage = ref(1)
+
+    const fetchInquiries = async (params: { page?: number, search?: string, category?: string, sentiment?: string } = {}) => {
         loading.value = true
         error.value = null
 
+        const query: any = {
+            page: params.page || 1,
+        }
+
+        if (params.search) query.search = params.search
+        if (params.category) query.category = params.category
+        if (params.sentiment) query.sentiment = params.sentiment
+
         try {
-            inquiries.value = await $fetch<Inquiry[]>(`${apiBase}/inquiries/`)
+            const data: any = await $fetch(`${apiBase}/inquiries/`, {
+                params: query
+            })
+
+            console.log("API Response:", data) // DEBUG
+
+            if (Array.isArray(data)) {
+                // Backend sent a plain list
+                inquiries.value = data.filter(i => i !== null && i !== undefined)
+                totalCount.value = inquiries.value.length
+            } else if (data && data.results && Array.isArray(data.results)) {
+                // Backend sent paginated response
+                inquiries.value = data.results.filter((i: any) => i !== null && i !== undefined)
+                totalCount.value = data.count
+            } else {
+                console.warn("Unexpected response format:", data)
+                inquiries.value = []
+                totalCount.value = 0
+            }
+
+            currentPage.value = query.page
+
         } catch (e) {
             console.error(e)
             error.value = 'Error al cargar inquiries'
@@ -48,6 +80,8 @@ export function useInquiries() {
 
     return {
         inquiries,
+        totalCount,
+        currentPage,
         loading,
         error,
         fetchInquiries,

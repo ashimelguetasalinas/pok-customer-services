@@ -1,5 +1,6 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, filters
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 
 
@@ -37,6 +38,9 @@ class InquiryCreateView(generics.CreateAPIView):
 class InquiryListView(generics.ListAPIView):
     queryset = Inquiry.objects.all().order_by("-created_at")
     serializer_class = InquiryListSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['category', 'sentiment', 'status']
+    search_fields = ['customer_name', 'email', 'message']
 
 
 class InquiryDetailView(generics.RetrieveAPIView):

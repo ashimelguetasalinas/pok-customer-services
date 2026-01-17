@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { useInquiries } from '../../composables/useInquiries';
+import { useInquiries } from '@/composables/useInquiries';
 
 const { loading, error, success, createInquiry, getInquiry } = useInquiries()
 const router = useRouter()

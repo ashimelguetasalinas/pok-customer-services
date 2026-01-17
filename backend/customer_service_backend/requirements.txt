@@ -12,3 +12,4 @@ psycopg[binary]>=3.1
 openai
 python-dotenv
 requests
+django-filter

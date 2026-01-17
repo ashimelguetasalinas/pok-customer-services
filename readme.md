@@ -1,119 +1,103 @@
 # POK - Sistema Inteligente de Atención al Cliente
 
 ## 1. Descripción
-Este proyecto integra un **backend Django Rest Framework** y un **frontend Nuxt 3 / Vue 3** para gestionar mensajes de clientes y procesarlos automáticamente con **IA (OpenAI GPT)**.  
+Este proyecto implementa una solución completa para la gestión y clasificación inteligente de mensajes de atención al cliente. Utiliza una arquitectura de **microservicios** con **Django Rest Framework** como backend principal, **Nuxt 3** para el frontend, y un **microservicio FastAPI** dedicado exclusivamente a la Inteligencia Artificial.
 
-El sistema clasifica los mensajes por categoría y sentimiento, y genera **respuestas sugeridas** editables. Está pensado para mejorar la productividad de los equipos de atención al cliente en POK.
+El sistema recibe consultas, las envía a una cola de procesamiento (Celery), y utiliza el servicio de IA para clasificar el mensaje (Categoría, Sentimiento) y generar una respuesta sugerida profesional.
 
 ---
 
-## 2. Arquitectura General
+## 2. Arquitectura del Sistema
 
+```mermaid
 flowchart LR
-    A[Cliente / Lead] -->|Envía mensaje| B[Frontend Nuxt 3]
-    B -->|POST /api/inquiries| C[Backend Django DRF]
-    C -->|Procesamiento asíncrono| D[Celery Worker]
-    D -->|Llama a OpenAI GPT| E[OpenAI API]
-    E -->|Resultado JSON| D
-    D --> C
-    C -->|GET /api/inquiries| B
+    Client[Cliente / Frontend] -->|HTTP POST| Django[Backend Django]
+    Django -->|Tarea Async| Celery[Celery Worker]
+    Celery -->|HTTP Client| AI[Microservicio IA (FastAPI)]
+    AI -->|OpenAI API| GPT[GPT-4o-mini]
+    GPT --> AI
+    AI --> Celery
+    Celery -->|Actualiza DB| Postgres[PostgreSQL]
+    Django -->|Lee Datos| Postgres
+```
 
+### Componentes:
+- **Frontend**: Nuxt 3 + Vue 3 + TailwindCSS. Diseño moderno tipo Dashboard.
+- **Backend Principal**: Django 5 + DRF. Maneja la lógica de negocio, usuarios y persistencia.
+- **Microservicio IA**: FastAPI. Encapsula la lógica de interacción con OpenAI.
+- **Cola de Tareas**: Celery + Redis. Asegura que el procesamiento de IA no bloquee la respuesta HTTP al usuario.
+- **Base de Datos**: PostgreSQL.
+- **Documentación API**: DRF Spectacular (Swagger/Redoc).
 
-## 3. Detalles
-    Backend:
-    Django + DRF para endpoints RESTful
-    Lógica de IA separada en servicios (services/openai_service.py)
-    Celery para procesamiento asíncrono (no bloquea requests)
-    Redis como broker
-    SQLite como DB persistente (volumen Docker)
-    Manejo de errores robusto (API fallida, JSON mal formado, etc.)
-    --------------------------------------------------------------
-    Frontend:
-    Nuxt 3 + Vue 3
-    Dashboard con lista de consultas y filtros
-    Indicadores visuales (colores/badges) según categoría y sentimiento
-    Vista de detalle con respuesta sugerida editable
-    Consumo de API mediante variable de entorno (NUXT_PUBLIC_API_URL)
-    Docker / DevOps
-    Dockerfiles separados por proyecto (backend / frontend)
-    Docker Compose central para levantar todo el stack
-    Persistencia de SQLite mediante volúmenes
-    Flower para monitoreo de Celery
+---
 
-## 4. Instalación y Ejecución
-    Requisitos
-    Docker y Docker Compose
-    Node.js y npm (solo para desarrollo frontend)
-    Levantar todo con Docker
-    bash
-    Copiar código
-    # Desde la raíz del proyecto
-    docker-compose up --build
-    Backend: http://localhost:8000
-    Frontend: http://localhost:3000
-    Flower (monitor Celery): http://localhost:5555
+## 3. Instalación y Ejecución
 
-    Variables de entorno
-    Backend (backend/customer_service_backend/.env):
+El proyecto está totalmente dockerizado para facilitar el despliegue.
 
-    env
-    DJANGO_SECRET_KEY=tu_clave
+### Requisitos
+- Docker Desktop instalado.
+
+### Pasos
+1.  **Clonar el repositorio**:
+    ```bash
+    git clone <repo-url>
+    cd customer_service_backend
+    ```
+
+2.  **Configurar Variables de Entorno**:
+    Asegúrate de tener el archivo `backend/customer_service_backend/.env` con tu API Key de OpenAI:
+    ```env
+    OPENAI_API_KEY=sk-...
     DJANGO_DEBUG=1
-    REDIS_URL=redis://redis:6379/0
-    OPENAI_API_KEY=tu_api_key
-    Frontend (pok-frontend/.env):
+    DJANGO_SECRET_KEY=secret
+    CELERY_BROKER_URL=redis://redis:6379/0
+    ```
 
-    env
-    NUXT_PUBLIC_API_URL=http://web:8000/api
+3.  **Levantar el stack**:
+    ```bash
+    docker-compose up --build
+    ```
 
-# 5. Endpoints principales
+4.  **Acceder a los servicios**:
+    - **Frontend**: [http://localhost:3000](http://localhost:3000)
+    - **Backend API**: [http://localhost:8000/api/](http://localhost:8000/api/)
+    - **Swagger Docs**: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
+    - **Flower (Monitor Celery)**: [http://localhost:5555](http://localhost:5555)
 
-    Método	    Endpoint	                Descripción
-    POST	/api/inquiries/create	    Crear una nueva consulta de cliente
-    GET	    /api/inquiries/	            Listar todas las consultas
-    GET	    /api/inquiries/{id}/	    Ver detalle de una consulta (incluye respuesta IA)
+---
 
-    Ejemplo de POST
-    POST /api/inquiries/create
-    Content-Type: application/json
+## 4. Features Implementadas
 
-    {
-    "customer_name": "Juan Perez",
-    "email": "juan@example.com",
-    "message": "Tengo un problema con mi pedido"
-    }
+### Backend
+- ✅ **API RESTful** con Django Rest Framework.
+- ✅ **Procesamiento Asíncrono** con Celery.
+- ✅ **Microservicio Desacoplado** de IA con FastAPI.
+- ✅ **Documentación Automática** con Swagger (OpenAPI 3.0).
+- ✅ **Robustez**: Manejo de errores en llamadas a IA y reintentos automáticos.
 
-    Respuesta ejemplo:    
-    {
-    "id": 1,
-    "customer_name": "Juan Perez",
-    "email": "juan@example.com",
-    "message": "Tengo un problema con mi pedido",
-    "category": "Soporte Técnico",
-    "sentiment": "Negativo",
-    "suggested_reply": "Hola Juan, lamentamos el inconveniente. Nuestro equipo lo revisará y te contactará pronto."
-    }
+### Frontend
+- ✅ **Dashboard Moderno**: Vista de tarjetas (Grid) con indicadores visuales de estado.
+- ✅ **Formulario de Creación**: Interfaz limpia para ingresar nuevas consultas.
+- ✅ **Skeleton Loaders**: Mejor experiencia de usuario durante la carga de datos.
+- ✅ **Modo Oscuro**: Soporte nativo para Dark Mode.
+- ✅ **Feedback en Tiempo Real**: Polling para actualizar el estado del ticket (Pending -> Processed).
 
-# 6. Features implementadas
+---
 
-    Recepción de consultas de clientes
-    Clasificación automática por categoría y sentimiento (IA)
-    Respuestas sugeridas editables en frontend
-    Dashboard con indicadores visuales
-    Procesamiento asíncrono con Celery + Redis
-    Dockerizado todo el stack para desarrollo y producción
-    Manejo de errores robusto (API OpenAI, JSON inválido)
-    Monitoreo de tareas con Flower
-    Persistencia de datos en SQLite mediante volúmenes Docker
+## 5. Endpoints Principales
 
-# 7. Decisiones de Arquitectura
-    Separación de responsabilidades: lógica de IA en services/, vistas limpias en backend, frontend solo consume API.
-    Dockerización: cada proyecto tiene su Dockerfile (frontend / backend) y un docker-compose central para levantar todo.
-    Persistencia de SQLite: usando volúmenes para no perder datos al reiniciar contenedores.
-    Celery + Redis: procesamiento de IA asíncrono, evita bloquear requests HTTP.
-    Nuxt 3 SSR: frontend moderno, rápido, con soporte de edición de respuestas y dashboard interactivo.
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | `/api/inquiries/create/` | Crear nueva consulta. Desencadena tarea de IA. |
+| GET | `/api/inquiries/` | Listar todas las consultas. |
+| GET | `/api/inquiries/{id}/` | Ver detalle y respuesta sugerida. |
 
-# 8. Bonus / Extra
-    Ready para testing: puedes agregar pytest para backend y Vitest para frontend.
-    Tipado completo: Python con type hints, frontend con TypeScript (opcional).
-    Escalable: backend puede migrar a Postgres si se desea, frontend soporta SSR y SPA.
+---
+
+## 6. Decisiones de Diseño (Bonus)
+
+- **Desacoplamiento total de IA**: Se extrajo la lógica de OpenAI a su propio servicio (`backend/ai_service`). Esto permite escalar la IA independientemente del backend principal o cambiar el proveedor de IA sin tocar el núcleo de Django.
+- **Interacción HTTP**: El backend Django actúa como un cliente HTTP que consume el servicio de IA, simulando una arquitectura real de microservicios.
+- **Type Safety**: Uso de Type Hints en Python y TypeScript en el Frontend para reducir errores en tiempo de desarrollo.
+- **UX Premium**: Se priorizó una interfaz limpia y "app-like" en lugar de tablas administrativas estándar.

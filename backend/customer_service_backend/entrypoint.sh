@@ -16,6 +16,9 @@ echo "✅ Base de datos disponible"
 echo "📦 Ejecutando migraciones..."
 python manage.py migrate --noinput
 
+echo "👑 Inicializando roles y superusuario..."
+python manage.py init_roles
+
 echo "📁 Recolectando estáticos (si aplica)..."
 python manage.py collectstatic --noinput || true
 

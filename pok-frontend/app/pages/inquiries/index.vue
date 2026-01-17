@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useInquiries } from '../../composables/useInquiries'
+import { useAuth } from '../../composables/useAuth'
 import CategoryBadge from '../../components/CategoryBadge.vue'
 import SentimentBadge from '../../components/SentimentBadge.vue'
+import StatusBadge from '../../components/StatusBadge.vue'
 
 const { inquiries, totalCount, currentPage, loading, error, fetchInquiries } = useInquiries()
+const { isAuthenticated, logout, user } = useAuth()
 
 const search = ref('')
 const category = ref('')
@@ -67,15 +70,37 @@ onUnmounted(() => {
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Inquiries</h1>
         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage and respond to customer questions</p>
       </div>
-      <NuxtLink 
-        to="/inquiries/create"
-        class="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/25 flex items-center gap-2 font-medium"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-        </svg>
-        New Inquiry
-      </NuxtLink>
+      <div class="flex items-center gap-3">
+        <div v-if="isAuthenticated" class="flex items-center gap-3">
+            <span class="text-sm text-gray-600 dark:text-gray-400 font-medium hidden sm:block">
+              {{ user?.username }}
+            </span>
+            <button
+                @click="logout"
+                class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                title="Logout"
+            >
+                Logout
+            </button>
+        </div>
+        <NuxtLink 
+            v-else
+            to="/login"
+            class="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
+        >
+            Login
+        </NuxtLink>
+
+        <NuxtLink 
+            to="/inquiries/create"
+            class="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/25 flex items-center gap-2 font-medium"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            New Inquiry
+        </NuxtLink>
+      </div>
     </div>
 
     <!-- Filters -->
@@ -181,16 +206,8 @@ onUnmounted(() => {
               </td>
 
               <!-- Status -->
-              <td class="px-4 py-4 whitespace-nowrap">
-                <span class="px-2 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full capitalize"
-                  :class="{
-                    'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300': item?.status === 'processed',
-                    'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300': item?.status === 'pending',
-                    'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300': item?.status === 'failed'
-                  }"
-                >
-                  {{ item?.status }}
-                </span>
+              <td class="px-4 py-4 whitespace-nowrap text-sm">
+                <StatusBadge :status="item?.status" />
               </td>
 
               <!-- Category -->

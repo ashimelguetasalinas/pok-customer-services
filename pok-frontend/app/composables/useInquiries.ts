@@ -78,6 +78,17 @@ export function useInquiries() {
         return await $fetch<Inquiry>(`${apiBase}/inquiries/${id}/`)
     }
 
+    const updateInquiry = async (id: number, payload: Partial<Inquiry>) => {
+        const auth = useAuth()
+        const token = auth.token.value
+
+        return await $fetch<Inquiry>(`${apiBase}/inquiries/${id}/`, {
+            method: 'PATCH',
+            body: payload,
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+        })
+    }
+
     return {
         inquiries,
         totalCount,
@@ -87,5 +98,6 @@ export function useInquiries() {
         fetchInquiries,
         createInquiry,
         getInquiry,
+        updateInquiry
     }
 }

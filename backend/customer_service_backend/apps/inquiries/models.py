@@ -2,11 +2,12 @@ from django.db import models
 
 class Inquiry(models.Model):
 
-    STATUS_CHOICES = (
+    STATUS_CHOICES = [
         ("pending", "Pending"),
         ("processed", "Processed"),
         ("failed", "Failed"),
-    )
+        ("finished", "Finished"),
+    ]
 
     CATEGORY_CHOICES = (
         ("sales", "Sales"),

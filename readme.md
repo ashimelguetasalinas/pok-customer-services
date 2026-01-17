@@ -26,7 +26,7 @@ flowchart LR
 - **Backend Principal**: Django 5 + DRF. Maneja la lógica de negocio, usuarios y persistencia.
 - **Microservicio IA**: FastAPI. Encapsula la lógica de interacción con OpenAI.
 - **Cola de Tareas**: Celery + Redis. Asegura que el procesamiento de IA no bloquee la respuesta HTTP al usuario.
-- **Base de Datos**: PostgreSQL.
+- **Base de Datos**: **PostgreSQL** (Dockerizada y conectada via red interna).
 - **Documentación API**: DRF Spectacular (Swagger/Redoc).
 
 ---

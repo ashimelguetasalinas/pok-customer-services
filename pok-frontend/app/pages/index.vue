@@ -1,21 +1,13 @@
 <script setup lang="ts">
-const { inquiries, loading, fetchInquiries } = useInquiries()
-
-onMounted(() => {
-  fetchInquiries()
+definePageMeta({
+  middleware: [
+    function (to, from) {
+      return navigateTo('/inquiries')
+    }
+  ]
 })
 </script>
 
 <template>
-  <div>
-    <h1>Inquiries</h1>
-
-    <div v-if="loading">Loading...</div>
-
-    <ul>
-      <li v-for="i in inquiries" :key="i.id">
-        {{ i.customer_name }} - {{ i.email }}
-      </li>
-    </ul>
-  </div>
+  <div>Redirecting...</div>
 </template>

@@ -11,14 +11,14 @@ El sistema recibe consultas, las envía a una cola de procesamiento (Celery), y 
 
 ```mermaid
 flowchart LR
-    Client[Cliente / Frontend] -->|HTTP POST| Django[Backend Django]
-    Django -->|Tarea Async| Celery[Celery Worker]
-    Celery -->|HTTP Client| AI[Microservicio IA (FastAPI)]
-    AI -->|OpenAI API| GPT[GPT-4o-mini]
+    Client["Cliente / Frontend"] -->|HTTP POST| Django["Backend Django"]
+    Django -->|Tarea Async| Celery["Celery Worker"]
+    Celery -->|HTTP Client| AI["Microservicio IA (FastAPI)"]
+    AI -->|OpenAI API| GPT["GPT-4o-mini"]
     GPT --> AI
-    AI --> Celery
-    Celery -->|Actualiza DB| Postgres[PostgreSQL]
-    Django -->|Lee Datos| Postgres
+    AI --> Celery["Celery Worker"]
+    Celery -->|Actualiza DB| Postgres["PostgreSQL"]
+    Django -->|Lee Datos| Postgres["PostgreSQL"]
 ```
 
 ### Componentes:

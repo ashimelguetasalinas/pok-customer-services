@@ -60,38 +60,41 @@ El proyecto está totalmente dockerizado para facilitar el despliegue.
     ```
 
 4.  **Acceder a los servicios**:
-    - **Frontend**: [http://localhost:3000](http://localhost:3000)
-    - **Backend API**: [http://localhost:8000/api/](http://localhost:8000/api/)
-    - **Swagger Docs**: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
-    - **Flower (Monitor Celery)**: [http://localhost:5555](http://localhost:5555)
+    - **Dashboard (Frontend)**: [http://localhost:3000](http://localhost:3000)
+    - **Django Admin**: [http://localhost:8000/admin/](http://localhost:8000/admin/) (Login con superusuario para gestión total).
+    - **Rest-API Browseable**: [http://localhost:8000/api/](http://localhost:8000/api/)
+    - **Documentación Swagger**: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
+    - **Monitor Celery (Flower)**: [http://localhost:5555](http://localhost:5555)
 
 ---
 
 ## 4. Features Implementadas
 
-### Backend
-- ✅ **API RESTful** con Django Rest Framework.
-- ✅ **Procesamiento Asíncrono** con Celery.
-- ✅ **Microservicio Desacoplado** de IA con FastAPI.
-- ✅ **Documentación Automática** con Swagger (OpenAPI 3.0).
-- ✅ **Robustez**: Manejo de errores en llamadas a IA y reintentos automáticos.
+### Backend & Seguridad
+- ✅ **Autenticación JWT**: Implementación de tokens (Access/Refresh) para seguridad robusta.
+- ✅ **RBAC (Role-Based Access Control)**: Diferenciación de permisos entre **Admin**, **Support** y usuarios regulares.
+- ✅ **API RESTful** con Django Rest Framework y filtros avanzados.
+- ✅ **Procesamiento Asíncrono**: Task queue con Celery + Redis para análisis en "background".
+- ✅ **Microservicio Desacoplado**: Lógica de IA aislada en FastAPI para escalabilidad independiente.
+- ✅ **Optimización de DB**: Indexación en Postgres para búsquedas ultra-rápidas por categoría, estado y sentimiento.
 
 ### Frontend
-- ✅ **Dashboard Moderno**: Vista de tarjetas (Grid) con indicadores visuales de estado.
-- ✅ **Formulario de Creación**: Interfaz limpia para ingresar nuevas consultas.
-- ✅ **Skeleton Loaders**: Mejor experiencia de usuario durante la carga de datos.
-- ✅ **Modo Oscuro**: Soporte nativo para Dark Mode.
-- ✅ **Feedback en Tiempo Real**: Polling para actualizar el estado del ticket (Pending -> Processed).
+- ✅ **Autenticación Completa**: Flujo de Login y Registro con validación de estado persistente.
+- ✅ **Dashboard Moderno (Nuxt 3)**: Gestión de estado compartida (`useState`) y caché inteligente para navegación instantánea.
+- ✅ **UX/UI Premium**: Modo Oscuro, Skeleton Loaders y feedback dinámico de tareas asíncronas.
 
 ---
 
 ## 5. Endpoints Principales
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| POST | `/api/inquiries/create/` | Crear nueva consulta. Desencadena tarea de IA. |
-| GET | `/api/inquiries/` | Listar todas las consultas. |
-| GET | `/api/inquiries/{id}/` | Ver detalle y respuesta sugerida. |
+| Método | Endpoint | Descripción | Protegido (JWT) |
+|--------|----------|-------------|-----------------|
+| POST | `/api/token/` | Obtener tokens de acceso (Login) | No |
+| POST | `/api/register/` | Registro de nuevos usuarios | No |
+| POST | `/api/inquiries/create/` | Crear nueva consulta (IA Async) | No |
+| GET | `/api/inquiries/` | Listar consultas (Filtros/Search) | No |
+| PATCH | `/api/inquiries/{id}/` | Actualizar consulta (Categoría/Estado) | **Si (RBAC)** |
+| GET | `/api/inquiries/{id}/` | Ver detalle completo | No |
 
 ---
 

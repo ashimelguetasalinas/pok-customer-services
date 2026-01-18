@@ -16,13 +16,13 @@ export function useInquiries() {
     const config = useRuntimeConfig()
     const apiBase = config.public.apiBase
 
-    const inquiries = ref<Inquiry[]>([])
+    // State sharing across components/pages
+    const inquiries = useState<Inquiry[]>('inquiries_list', () => [])
+    const totalCount = useState<number>('inquiries_total', () => 0)
+    const currentPage = useState<number>('inquiries_current_page', () => 1)
+
     const loading = ref(false)
     const error = ref<string | null>(null)
-
-    // 🔹 LISTADO (con filtros y paginación)
-    const totalCount = ref(0)
-    const currentPage = ref(1)
 
     const fetchInquiries = async (params: { page?: number, search?: string, category?: string, sentiment?: string } = {}) => {
         loading.value = true
@@ -41,18 +41,13 @@ export function useInquiries() {
                 params: query
             })
 
-            console.log("API Response:", data) // DEBUG
-
             if (Array.isArray(data)) {
-                // Backend sent a plain list
-                inquiries.value = data.filter(i => i !== null && i !== undefined)
+                inquiries.value = data.filter(i => i !== null)
                 totalCount.value = inquiries.value.length
-            } else if (data && data.results && Array.isArray(data.results)) {
-                // Backend sent paginated response
-                inquiries.value = data.results.filter((i: any) => i !== null && i !== undefined)
+            } else if (data && data.results) {
+                inquiries.value = data.results.filter((i: any) => i !== null)
                 totalCount.value = data.count
             } else {
-                console.warn("Unexpected response format:", data)
                 inquiries.value = []
                 totalCount.value = 0
             }
@@ -61,20 +56,27 @@ export function useInquiries() {
 
         } catch (e) {
             console.error(e)
-            error.value = 'Error al cargar inquiries'
+            error.value = 'Error loading inquiries'
         } finally {
             loading.value = false
         }
     }
 
     const createInquiry = async (payload: any) => {
-        return await $fetch<Inquiry>(`${apiBase}/inquiries/create/`, {
+        const item = await $fetch<Inquiry>(`${apiBase}/inquiries/create/`, {
             method: 'POST',
             body: payload,
         })
+        // Optimized: Add to state locally to avoid full refresh if simple
+        inquiries.value = [item, ...inquiries.value].slice(0, 10)
+        return item
     }
 
     const getInquiry = async (id: number) => {
+        // Optimized: Check shared state first
+        const cached = inquiries.value.find(i => i.id === Number(id))
+        if (cached) return cached
+
         return await $fetch<Inquiry>(`${apiBase}/inquiries/${id}/`)
     }
 
@@ -82,11 +84,19 @@ export function useInquiries() {
         const auth = useAuth()
         const token = auth.token.value
 
-        return await $fetch<Inquiry>(`${apiBase}/inquiries/${id}/`, {
+        const updated = await $fetch<Inquiry>(`${apiBase}/inquiries/${id}/`, {
             method: 'PATCH',
             body: payload,
             headers: token ? { Authorization: `Bearer ${token}` } : {}
         })
+
+        // Optimized: Update shared state
+        const index = inquiries.value.findIndex(i => i.id === Number(id))
+        if (index !== -1) {
+            inquiries.value[index] = { ...inquiries.value[index], ...updated }
+        }
+
+        return updated
     }
 
     return {

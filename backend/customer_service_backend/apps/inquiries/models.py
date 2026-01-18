@@ -28,17 +28,18 @@ class Inquiry(models.Model):
     email = models.EmailField()
     message = models.TextField()
 
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, null=True)
-    sentiment = models.CharField(max_length=50, choices=SENTIMENT_CHOICES, null=True)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, null=True, db_index=True)
+    sentiment = models.CharField(max_length=50, choices=SENTIMENT_CHOICES, null=True, db_index=True)
     suggested_response = models.TextField(null=True)
 
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default="pending",
+        db_index=True,
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def __str__(self):
         return f"{self.customer_name} - {self.status}"

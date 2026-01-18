@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import os
-from openai import OpenAI, OpenAIError
+from openai import OpenAI, AsyncOpenAI, OpenAIError
 import json
 
 app = FastAPI()
@@ -18,6 +18,7 @@ class AnalyzeResponse(BaseModel):
 # Config & Constants
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
+async_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
 CATEGORIES = [
     "sales",
@@ -63,12 +64,12 @@ Customer message:
 """
 
 @app.post("/analyze", response_model=AnalyzeResponse)
-def analyze_inquiry(request: AnalyzeRequest):
+async def analyze_inquiry(request: AnalyzeRequest):
     if not OPENAI_API_KEY:
         raise HTTPException(status_code=500, detail="OPENAI_API_KEY not configured")
 
     try:
-        response = client.chat.completions.create(
+        response = await async_client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},

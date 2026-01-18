@@ -1,0 +1,16 @@
+.git
+.gitignore
+node_modules
+dist
+.nuxt
+.output
+venv
+__pycache__
+*.pyc
+.env
+db.sqlite3
+postgres_data
+redis_data
+docker-compose.override.yml
+backend/customer_service_backend/static
+backend/customer_service_backend/media

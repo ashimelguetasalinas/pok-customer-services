@@ -1,4 +1,4 @@
-from rest_framework import generics, status, filters
+from rest_framework import generics, status, filters, permissions
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
@@ -9,6 +9,18 @@ from .serializers import CustomTokenObtainPairSerializer
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+class IsAdminOrSupport(permissions.BasePermission):
+    """
+    Permission class to verify if user belongs to Admin or Support groups.
+    """
+    def has_permission(self, request, view):
+        if not request.user or not request.user.is_authenticated:
+            return False
+        return (
+            request.user.is_superuser or 
+            request.user.groups.filter(name__in=['Admin', 'Support']).exists()
+        )
 
 
 from .models import Inquiry
@@ -57,16 +69,13 @@ class InquiryListView(generics.ListAPIView):
     search_fields = ['customer_name', 'email', 'message']
 
 
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.exceptions import PermissionDenied
-
 class InquiryDetailView(generics.RetrieveUpdateAPIView):
     queryset = Inquiry.objects.all()
     serializer_class = InquiryDetailSerializer
 
     def get_permissions(self):
         if self.request.method in ['PUT', 'PATCH']:
-            return [IsAuthenticated()]
+            return [IsAdminOrSupport()]
         return [AllowAny()]
 
     def perform_update(self, serializer):
@@ -74,22 +83,12 @@ class InquiryDetailView(generics.RetrieveUpdateAPIView):
         validated_data = serializer.validated_data
         instance = serializer.instance
 
-        # Check for Admin privileges
-        is_admin = user.groups.filter(name='Admin').exists() or user.is_superuser
-        is_support = user.groups.filter(name='Support').exists()
+        is_admin = user.is_superuser or user.groups.filter(name='Admin').exists()
 
-        if is_admin:
-            # Admin can do anything
-            serializer.save()
-        elif is_support:
+        if not is_admin:
+            # If not admin, must be support (due to IsAdminOrSupport check)
             # Support can ONLY change category
-            # Prevent status change
             if 'status' in validated_data and validated_data['status'] != instance.status:
                 raise PermissionDenied("Support roles cannot change inquiry status.")
             
-            serializer.save()
-        else:
-            # Users without these roles shouldn't be updating, but if authenticated...
-            # We deny by default if not in specific group to be safe, or allow category?
-            # User request implied specifically these roles.
-            raise PermissionDenied("You do not have permission to edit this inquiry.")
+        serializer.save()

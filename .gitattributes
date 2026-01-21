@@ -1,0 +1,6 @@
+# Enforce LF for shell scripts to prevent Docker issues on Windows
+*.sh text eol=lf
+Dockerfile text eol=lf
+
+# Global handles for other files
+* text=auto

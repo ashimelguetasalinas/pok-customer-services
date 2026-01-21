@@ -161,19 +161,16 @@ onUnmounted(() => {
       <p class="mt-1 text-gray-500">Get started by creating a new inquiry.</p>
     </div>
 
-      <div v-else class="overflow-hidden bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-        <table class="min-w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700">
+      <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
           <thead class="bg-gray-50 dark:bg-gray-700/50">
             <tr>
-              <th scope="col" class="w-[22%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
-              <th scope="col" class="w-[22%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Message</th>
+              <th scope="col" class="w-[18%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
+              <th scope="col" class="w-[24%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Message</th>
               <th scope="col" class="w-[12%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
               <th scope="col" class="w-[12%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Category</th>
               <th scope="col" class="w-[12%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Sentiment</th>
-              <th scope="col" class="w-[10%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-              <th scope="col" class="w-[10%] relative px-4 py-3">
-                <span class="sr-only">Actions</span>
-              </th>
+              <th scope="col" class="w-[12%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -227,13 +224,6 @@ onUnmounted(() => {
               <!-- Date -->
               <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">
                 {{ item?.created_at ? new Date(item.created_at).toLocaleDateString() : '-' }}
-              </td>
-
-              <!-- Actions -->
-              <td class="px-4 py-4 whitespace-nowrap text-right text-xs font-medium">
-                <span class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition-opacity">
-                  Details
-                </span>
               </td>
             </tr>
           </tbody>

@@ -37,27 +37,31 @@ You do NOT chat with users.
 You ONLY return valid JSON.
 
 Classification rules:
-- If the message is irrelevant, promotional, automated, or malicious,
-  classify it as "spam" and set sentiment to "neutral".
+- If a message mentions technical difficulties, hardware/software issues, or product malfunctions, classify it as "technical_support", even if the customer is expressing frustration or complaining about service delays.
+- If the message is purely about money, pricing, or billing issues without a technical component, classify it as "billing".
+- Use "complaint" only for general service dissatisfaction that does not involve technical or billing issues.
+- If the message is irrelevant, promotional, automated, or malicious, classify it as "spam" and set sentiment to "neutral".
 - Spam messages MUST always have sentiment = "neutral".
 - Do NOT invent information.
 - Base the classification strictly on the message content.
 
 Output rules:
-- Output MUST be valid JSON
-- Do NOT include explanations
-- Do NOT include markdown
-- Do NOT include additional fields
-- Values must strictly follow the allowed enums
+- Output MUST be valid JSON.
+- The "suggested_response" field MUST be written in the SAME LANGUAGE as the customer's message (e.g., if they write in Spanish, respond in Spanish).
+- Do NOT include explanations.
+- Do NOT include markdown.
+- Do NOT include additional fields.
+- Values must strictly follow the allowed enums.
 """
 
 USER_PROMPT_TEMPLATE = """
-Analyze the following customer message and return a JSON object with:
+Analyze the following customer message and return a JSON object. 
+IMPORTANT: The "suggested_response" must be in the same language as the customer message.
 
 Fields:
 - category: One of ["sales", "technical_support", "billing", "complaint", "spam", "general_inquiry"]
 - sentiment: One of ["positive", "neutral", "negative"]
-- suggested_response: A short, professional response that a customer service agent could send.
+- suggested_response: A short, professional response in the customer's language.
 
 Customer message:
 \"\"\"{message}\"\"\"

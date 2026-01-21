@@ -104,3 +104,23 @@ El proyecto está totalmente dockerizado para facilitar el despliegue.
 - **Interacción HTTP**: El backend Django actúa como un cliente HTTP que consume el servicio de IA, simulando una arquitectura real de microservicios.
 - **Type Safety**: Uso de Type Hints en Python y TypeScript en el Frontend para reducir errores en tiempo de desarrollo.
 - **UX Premium**: Se priorizó una interfaz limpia y "app-like" en lugar de tablas administrativas estándar.
+- **Testing Engine**: Suite de pruebas integrada en el flujo de desarrollo para prevenir regresiones.
+
+---
+
+## 7. Pruebas Automatizadas (Backend)
+
+Para garantizar la estabilidad del sistema, se han implementado 13 pruebas automatizadas que cubren modelos, vistas y permisos.
+
+### Cómo ejecutar los tests:
+
+Asegúrate de que los contenedores estén corriendo y ejecuta:
+
+```bash
+docker exec backend python manage.py test apps.inquiries --settings=config.settings_test
+```
+
+### Cobertura:
+- **Lógica de Modelos**: Validaciones de integridad y tipos de datos.
+- **Permisos de API (RBAC)**: Verificación de que solo usuarios autorizados pueden editar estados de solicitudes.
+- **Flujo de IA Asíncrono**: Simulación de tareas de Celery para validar la integración con el servicio de IA.

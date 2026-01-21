@@ -13,14 +13,16 @@ fi
 
 echo "✅ Base de datos disponible"
 
-echo "📦 Ejecutando migraciones..."
-python manage.py migrate --noinput
+if [ "$RUN_MIGRATIONS" = "1" ]; then
+  echo "📦 Ejecutando migraciones..."
+  python manage.py migrate --noinput
 
-echo "👑 Inicializando roles y superusuario..."
-python manage.py init_roles
+  echo "👑 Inicializando roles y superusuario..."
+  python manage.py init_roles
 
-echo "📁 Recolectando estáticos (si aplica)..."
-python manage.py collectstatic --noinput || true
+  echo "📁 Recolectando estáticos (si aplica)..."
+  python manage.py collectstatic --noinput || true
+fi
 
 echo "🚀 Iniciando aplicación..."
 exec "$@"

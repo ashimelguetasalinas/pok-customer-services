@@ -161,16 +161,16 @@ onUnmounted(() => {
       <p class="mt-1 text-gray-500">Get started by creating a new inquiry.</p>
     </div>
 
-      <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
+      <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 min-w-[900px]">
           <thead class="bg-gray-50 dark:bg-gray-700/50">
             <tr>
-              <th scope="col" class="w-[18%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
-              <th scope="col" class="w-[24%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Message</th>
-              <th scope="col" class="w-[12%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-              <th scope="col" class="w-[12%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Category</th>
-              <th scope="col" class="w-[12%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Sentiment</th>
-              <th scope="col" class="w-[12%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+              <th scope="col" class="w-[15%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
+              <th scope="col" class="w-[35%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Message</th>
+              <th scope="col" class="w-[10%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+              <th scope="col" class="w-[15%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Category</th>
+              <th scope="col" class="w-[15%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Sentiment</th>
+              <th scope="col" class="w-[10%] px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -197,7 +197,7 @@ onUnmounted(() => {
 
               <!-- Message Preview -->
               <td class="px-4 py-4">
-                <div class="text-sm text-gray-900 dark:text-white truncate" :title="item?.message">
+                <div class="text-sm text-gray-900 dark:text-white truncate max-w-[400px]" :title="item?.message">
                   {{ item?.message || 'No message content' }}
                 </div>
               </td>
